@@ -2,6 +2,7 @@
 
 import { FC, useState, FormEvent } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const BookFinder: FC = () => {
   const [bookName, setBookName] = useState("");
@@ -24,19 +25,20 @@ const BookFinder: FC = () => {
     <div className="min-h-screen bg-gray-100 flex flex-col items-center py-10">
       <h1 className="text-3xl font-bold mb-6">Book Finder</h1>
       <form onSubmit={handleSubmit} className="mb-6 w-full max-w-md">
-        <input
+        <Input
           type="text"
           value={bookName}
           onChange={(e) => setBookName(e.target.value)}
           placeholder="Enter book name"
           className="w-full p-3 border border-gray-300 rounded-md mb-4"
         />
-        <button
+        <Button
           type="submit"
-          className="w-full bg-blue-500 text-white py-3 rounded-md hover:bg-blue-600 transition duration-300"
+          variant={"default"}
+          className="w-full text-white py-3 rounded-md hover:bg-blue-600 transition duration-300"
         >
           Search
-        </button>
+        </Button>
       </form>
       <ul className="w-full max-w-md">
         {results.map((result: any, index) => (
