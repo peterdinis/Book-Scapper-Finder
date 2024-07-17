@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import puppeteer from 'puppeteer';
 
+const GOOGLE_URL = process.env.NEXT_PUBLIC_GOOGLE_URL!;
+
 export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const bookName = searchParams.get('bookName');
@@ -19,7 +21,7 @@ export async function GET(req: Request) {
         });
         const page = await browser.newPage();
         await page.goto(
-            `https://www.google.com/search?q=${encodeURIComponent(bookName)}+buy+book`,
+            `${GOOGLE_URL}/search?q=${encodeURIComponent(bookName)}+buy+book`,
         );
 
         const results = await page.evaluate(() => {
