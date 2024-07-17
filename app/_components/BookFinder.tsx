@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, Key, useState } from "react";
+import { FC, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,11 +8,14 @@ import { useForm } from "react-hook-form";
 import { schema, BookFormData } from "./bookFinderSchema";
 import { BookResultsTypes } from "../_types/bookTypes";
 import useSWR from "swr";
-import {Loader2} from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { fetcher } from "../_utils/fetcher";
+import { motion } from "framer-motion";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import Link from "next/link";
 
 const BookFinder: FC = () => {
-  const [bookName, setBookName] = useState("");
+  const [bookName, setBookName] = useState<string>("");
   const { register, handleSubmit, formState: { errors }, reset } = useForm<BookFormData>({
     resolver: zodResolver(schema),
   });
@@ -23,9 +26,8 @@ const BookFinder: FC = () => {
     reset();
   };
 
-  if (error) return <p className="text-red-500">Failed to fetch results.</p>;
-
-  if(isLoading) return <Loader2 className="animate-spin w-8 h-8" />
+  if (error) return <p className="text-red-500 font-bold text-xl">Failed to fetch results.</p>;
+  if (isLoading) return <Loader2 className="animate-spin w-8 h-8" />;
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center py-10">
@@ -47,17 +49,30 @@ const BookFinder: FC = () => {
         </Button>
       </form>
       <ul className="w-full max-w-md">
-        {results && results.map((result: BookResultsTypes, index: Key) => (
-          <li key={index} className="bg-white p-4 mb-2 shadow-md rounded-md">
-            <a
-              href={result.link}
-              className="text-blue-500 hover:underline"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {result.title}
-            </a>
-          </li>
+        {results && results.map((result: BookResultsTypes, index: number) => (
+          <motion.li 
+            key={index} 
+            className="mb-2"
+            initial={{ opacity: 0, translateY: -20 }}
+            animate={{ opacity: 1, translateY: 0 }}
+            transition={{ duration: 0.3, delay: index * 0.1 }}
+          >
+            <Card>
+              <CardHeader>
+                <CardTitle className="prose prose-h1:">{result.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Link
+                  href={result.link}
+                  className="text-blue-500"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View Book
+                </Link>
+              </CardContent>
+            </Card>
+          </motion.li>
         ))}
       </ul>
     </div>

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Arima } from "next/font/google";
 import "./globals.css";
 
-const inter = Arima({ subsets: ["latin"] });
+const arima = Arima({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Book Finder",
@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={arima.className}>{children}</body>
     </html>
   );
 }

@@ -17,12 +17,11 @@ export async function GET(req: Request) {
     const page = await browser.newPage();
     await page.goto(`https://www.google.com/search?q=${encodeURIComponent(bookName)}+buy+book`);
 
-    // Extract data from Google search results
     const results = await page.evaluate(() => {
       const items = Array.from(document.querySelectorAll('.tF2Cxc'));
       return items.map(item => {
         const titleElement = item.querySelector('.DKV0Md');
-        const linkElement = item.querySelector('.yuRUbf a') as HTMLAnchorElement;
+        const linkElement = item.querySelector('.yuRUbf a') as unknown as HTMLAnchorElement;
 
         const title = titleElement ? titleElement.textContent : null;
         const link = linkElement ? linkElement.href : null;
@@ -33,7 +32,6 @@ export async function GET(req: Request) {
 
     await browser.close();
 
-    // Filter results to include only those likely to sell books
     const filteredResults = results.filter(result => 
       result.link && (
         result.link.includes('book') || 
