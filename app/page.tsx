@@ -1,7 +1,7 @@
 import BookFinder from './_components/BookFinder';
 
 const Homepage = () => {
-  return <BookFinder />
-}
+    return <BookFinder />;
+};
 
 export default Homepage;
