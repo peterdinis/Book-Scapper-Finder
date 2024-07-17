@@ -7,26 +7,25 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { schema, BookFormData } from "./bookFinderSchema";
 import { BookResultsTypes } from "../_types/bookTypes";
+import useSWR from "swr";
+import {Loader2} from "lucide-react";
+import { fetcher } from "../_utils/fetcher";
 
 const BookFinder: FC = () => {
-  const [results, setResults] = useState([]);
-
+  const [bookName, setBookName] = useState("");
   const { register, handleSubmit, formState: { errors }, reset } = useForm<BookFormData>({
     resolver: zodResolver(schema),
   });
+  const { data: results, isLoading, error } = useSWR(bookName ? `/api/search?bookName=${encodeURIComponent(bookName)}` : null, fetcher);
 
-  const handleBookSubmit = async (data: BookFormData) => {
-    const res = await fetch(
-      `/api/search?bookName=${encodeURIComponent(data.bookName)}`
-    );
-    if (!res.ok) {
-      console.error("Failed to fetch");
-      return;
-    }
-    const dataResults = await res.json();
-    setResults(dataResults);
+  const handleBookSubmit = (data: BookFormData) => {
+    setBookName(data.bookName);
     reset();
   };
+
+  if (error) return <p className="text-red-500">Failed to fetch results.</p>;
+
+  if(isLoading) return <Loader2 className="animate-spin w-8 h-8" />
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center py-10">
@@ -48,7 +47,7 @@ const BookFinder: FC = () => {
         </Button>
       </form>
       <ul className="w-full max-w-md">
-        {results.map((result: BookResultsTypes, index: Key) => (
+        {results && results.map((result: BookResultsTypes, index: Key) => (
           <li key={index} className="bg-white p-4 mb-2 shadow-md rounded-md">
             <a
               href={result.link}
