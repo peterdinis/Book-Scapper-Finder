@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Arima } from "next/font/google";
 import "./globals.css";
+import ScrollToTop from "./_components/ScrollToTop";
 
 const arima = Arima({ subsets: ["latin"] });
 
@@ -16,7 +17,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={arima.className}>{children}</body>
+      <body className={arima.className}>
+        {children}
+        <ScrollToTop />
+      </body>
     </html>
   );
 }
