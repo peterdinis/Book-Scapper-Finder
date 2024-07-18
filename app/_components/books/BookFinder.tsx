@@ -5,14 +5,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { schema, BookFormData } from '../_schemas/bookFinderSchema';
-import { BookResultsTypes } from '../_types/bookTypes';
 import useSWR from 'swr';
 import { Loader2 } from 'lucide-react';
-import { fetcher } from '../_utils/fetcher';
 import { motion } from 'framer-motion';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
+import { BookFormData, schema } from '@/app/_schemas/bookFinderSchema';
+import { BookResultsTypes } from '@/app/_types/bookTypes';
+import { fetcher } from '@/app/_utils/fetcher';
 
 const BookFinder: FC = () => {
     const [bookName, setBookName] = useState<string>('');

@@ -1,4 +1,4 @@
-import BookFinder from './_components/BookFinder';
+import BookFinder from "./_components/books/BookFinder";
 
 const Homepage = () => {
     return <BookFinder />;
