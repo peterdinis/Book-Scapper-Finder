@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Arima } from 'next/font/google';
 import './globals.css';
-import ScrollToTop from './_components/ScrollToTop';
+import ScrollToTop from './_components/shared/ScrollToTop';
 
 const arima = Arima({ subsets: ['latin'] });
 
