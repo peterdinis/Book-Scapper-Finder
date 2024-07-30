@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
         });
         const page = await browser.newPage();
         await page.goto(
-            `${process.env.NEXT_PUBLIC_GOOGLE_URL!}/search?q=${encodeURIComponent(bookName)}+buy+book`,
+            `https://www.google.com/search?q=${encodeURIComponent(bookName)}+buy+book`,
         );
 
         const results = await page.evaluate(() => {
