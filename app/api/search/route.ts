@@ -18,33 +18,28 @@ export async function GET(req: NextRequest) {
             args: ['--no-sandbox', '--disable-setuid-sandbox'],
         });
         const page = await browser.newPage();
-        await page.goto(
-            `https://www.google.com/search?q=${encodeURIComponent(bookName)}+buy+book`,
-        );
+        await page.goto(`https://www.amazon.com/s?k=${encodeURIComponent(bookName)}+book`);
 
         const results = await page.evaluate(() => {
-            const items = Array.from(document.querySelectorAll('.tF2Cxc'));
+            const items = Array.from(document.querySelectorAll('.s-main-slot .s-result-item'));
             return items.map((item) => {
-                const titleElement = item.querySelector('.DKV0Md');
-                const linkElement = item.querySelector(
-                    '.yuRUbf a',
-                ) as unknown as HTMLAnchorElement;
+                const titleElement = item.querySelector('h2 .a-link-normal.a-text-normal');
+                const linkElement = titleElement as HTMLAnchorElement;
 
-                const title = titleElement ? titleElement.textContent : null;
-                const link = linkElement ? linkElement.href : null;
+                const title = titleElement ? titleElement.textContent!.trim() : null;
+                const link = linkElement ? `https://www.amazon.com${linkElement.getAttribute('href')}` : null;
 
                 return { title, link };
-            });
+            }).filter(item => item.title && item.link);
         });
 
         await browser.close();
 
         const filteredResults = results.filter(
-            (result: { link: string | string[]; }) =>
+            (result: { title: string | null, link: string | null }) =>
+                result.title &&
                 result.link &&
-                (result.link.includes('book') ||
-                    result.link.includes('shop') ||
-                    result.link.includes('store')),
+                result.title.toLowerCase().includes(bookName.toLowerCase())
         );
 
         return NextResponse.json(filteredResults, { status: 200 });
