@@ -40,7 +40,7 @@ export async function GET(req: NextRequest) {
         await browser.close();
 
         const filteredResults = results.filter(
-            (result) =>
+            (result: { link: string | string[]; }) =>
                 result.link &&
                 (result.link.includes('book') ||
                     result.link.includes('shop') ||
