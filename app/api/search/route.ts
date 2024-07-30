@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-core';
+import chromium from 'chrome-aws-lambda';
 
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
@@ -12,10 +13,13 @@ export async function GET(req: NextRequest) {
         );
     }
 
+    let browser = null;
     try {
-        const browser = await puppeteer.launch({
-            headless: true,
-            args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        browser = await chromium.puppeteer.launch({
+            args: chromium.args,
+            defaultViewport: chromium.defaultViewport,
+            executablePath: await chromium.executablePath,
+            headless: chromium.headless,
         });
         const page = await browser.newPage();
         await page.goto(`https://www.amazon.com/s?k=${encodeURIComponent(bookName)}+book`);
@@ -33,8 +37,6 @@ export async function GET(req: NextRequest) {
             }).filter(item => item.title && item.link);
         });
 
-        await browser.close();
-
         const filteredResults = results.filter(
             (result: { title: string | null, link: string | null }) =>
                 result.title &&
@@ -48,5 +50,9 @@ export async function GET(req: NextRequest) {
             { error: 'Error occurred while searching' },
             { status: 500 },
         );
+    } finally {
+        if (browser !== null) {
+            await browser.close();
+        }
     }
 }
