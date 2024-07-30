@@ -76,10 +76,10 @@ const BookFinder: FC = () => {
                     Search
                 </Button>
             </form>
-            <ul className='w-full max-w-md'>
+            <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 w-full max-w-5xl'>
                 {results &&
                     results.map((result: BookResultsTypes, index: number) => (
-                        <motion.li
+                        <motion.div
                             key={index}
                             className='mb-2'
                             initial={{ opacity: 0, translateY: -20 }}
@@ -103,9 +103,9 @@ const BookFinder: FC = () => {
                                     </Link>
                                 </CardContent>
                             </Card>
-                        </motion.li>
+                        </motion.div>
                     ))}
-            </ul>
+            </div>
         </div>
     );
 };
